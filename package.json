@@ -1,0 +1,24 @@
+{
+  "name": "max",
+  "version": "1.0.0",
+  "description": "Max is a happy Trello bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "tape ./test/tests.js",
+    "webhooks": "webhooks"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karlpokus/max"
+  },
+  "author": "Karl Pokus <karl.pokus@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "trobot": "^1.0.0"
+  },
+  "devDependencies": {
+    "request": "^2.72.0",
+    "tape": "^4.5.1"
+  }
+}

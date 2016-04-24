@@ -2,7 +2,7 @@
 
 var test = require('tape'),
     r = require('request'),
-    url = "http://node-playground-178080.nitrousapp.com:8080/";
+    url = "https://max-the-bot.herokuapp.com/";
 
 
 test('http', function(t){

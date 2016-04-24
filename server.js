@@ -4,7 +4,7 @@ var http = require('http'),
 
 // server
 var server = http.createServer(),
-    port = 8080;
+    port = process.env.PORT || 8080;
 
 // events
 server.on('request', router.dispatch.bind(router));

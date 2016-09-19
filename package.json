@@ -1,6 +1,6 @@
 {
   "name": "max",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Max is a happy Trello bot",
   "main": "server.js",
   "scripts": {
@@ -21,7 +21,6 @@
     "trobot": "*"
   },
   "devDependencies": {
-    "request": "^2.72.0",
     "tape": "^4.5.1"
   }
 }

@@ -1,10 +1,40 @@
-// server must be running!
+// set dummy env vars
+process.env.KEY = 'dummy key';
+process.env.TOKEN = 'dummy token';
+process.env.USERID = '123456';
+process.env.USERNAME = 'maxblipblop';
 
 var test = require('tape'),
-    r = require('request'),
-    url = "https://max-the-bot.herokuapp.com/";
+    max = require('../lib/bot.js');
+
+// overwrite postcomment for testing purposes
+max.postComment = function(cardId, answer) {
+  return answer;
+}
+
+test('kommentarTillBot', function(t){
+  var data = {
+    action: {
+      data: {
+        text: '@maxblipblop vem är sekreterare på vug',
+        card: {id: 'cardId'}
+      },
+      memberCreator: {id: 'some id', username: 'bob'}
+    }
+  },
+  answer1 = max.kommentarTillBot(data),
+  person = max._sekreterare(new Date());
+  
+  data.action.data.text = '@maxblipblop läget?';
+  var answer2 = max.kommentarTillBot(data);
+  
+  t.equal(answer1, '@bob ' + person + ' är sekreterare denna veckan.', '._sekreterare');
+  t.equal(answer2, '@bob ' + 'Blip blop', 'blip blop');
+  t.end();
+});
 
 
+/*
 test('http', function(t){
 
   t.plan(4);
@@ -34,3 +64,5 @@ test('http', function(t){
   });
 
 });
+
+*/

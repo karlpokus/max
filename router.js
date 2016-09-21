@@ -34,16 +34,18 @@ var router = {
       res.end();
 
       if (data !== "") {
-        data = JSON.parse(data);
         
         // debug
-        console.log('data:', data);
+        console.log('data:', JSON.parse(data));
         
-        that.passOnToBot(data, req);
+        req.body = data;
+        that.passOnToBot(req);
       }
     });
   },
-  passOnToBot: function(data, req) {
+  passOnToBot: function(req) {
+    var data = JSON.parse(req.body);
+    
     if (max.originIsTrello(req)) {
 
       // debug
@@ -59,6 +61,5 @@ var router = {
     }
   }
 };
-
 
 module.exports = router;

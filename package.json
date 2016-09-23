@@ -15,7 +15,7 @@
   "author": "Karl Pokus <karl.pokus@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": "5.10.1"
+    "node": "6.x"
   },
   "dependencies": {
     "pype-stack": "^0.1.1",

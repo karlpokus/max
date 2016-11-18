@@ -7,13 +7,14 @@ var http = require('http'),
     checkOrigin = require('./lib/checkOrigin'),
     logger = require('./lib/logger'),
     botAction = require('./lib/botAction'),
-    stack = [dataparser, attachBot, checkOrigin, logger, botAction],
+    stack = [dataparser, attachBot, checkOrigin, botAction],
     errorHandler = function(err, req, res){
       console.error(err);
       res.statusCode = 200;
       res.end();
     },
     finalHandler = function(req, res){
+      console.log('finalHandler called'); // debug
       res.statusCode = 200;
       res.end();
     },

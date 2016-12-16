@@ -1,41 +1,20 @@
 var http = require('http'),
     server = http.createServer(),
-    //router = require('./router.js'),
-    pype = require('pype-stack'),
-    dataparser = require('./lib/dataparser'),
-    attachBot = require('./lib/attachBot'),
-    checkOrigin = require('./lib/checkOrigin'),
-    logger = require('./lib/logger'),
-    botAction = require('./lib/botAction'),
-    stack = [dataparser, attachBot, checkOrigin, botAction],
-    errorHandler = function(err, req, res){
-      console.error(err);
+    port = process.env.PORT || 8080,
+    max = require('./lib/bot');
+
+server
+  .on('request', function(req, res){
+    if (req.method === 'HEAD') {
       res.statusCode = 200;
       res.end();
-    },
-    finalHandler = function(req, res){
-      console.log('finalHandler called'); // debug
-      res.statusCode = 200;
+    } else if (req.method === 'POST') {
+      max.emit('request', req, res);
+    } else {
+      res.statusCode = 403;
       res.end();
-    },
-    port = process.env.PORT || 8080;
-
-server.on('request', function(req, res){
-
-  if (req.method === 'HEAD') {
-    res.statusCode = 200;
-    res.end();
-  }
-  if (req.method === 'POST') {
-    pype(null, stack, errorHandler, finalHandler)(req, res);
-  }
-  if (req.method !== 'POST' || req.method === 'HEAD') {
-    res.statusCode = 403;
-    res.end();
-  }
-
-});
-
-server.listen(port, function(){
-  console.log('Max is running..');
-});
+    }
+  })
+  .listen(port, function(){
+    max.emit('log', 'Max is running..');
+  });

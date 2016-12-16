@@ -4,6 +4,9 @@ process.env.TOKEN = 'dummy token';
 process.env.USERID = '123456';
 process.env.USERNAME = 'maxblipblop';
 
+
+// remove event handler for 'reply' for testing
+
 var test = require('tape'),
     max = require('../lib/bot.js');
 

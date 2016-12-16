@@ -1,6 +1,6 @@
 {
   "name": "max",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Max is a happy Trello bot",
   "main": "server.js",
   "scripts": {
@@ -18,7 +18,6 @@
     "node": "6.x"
   },
   "dependencies": {
-    "pype-stack": "^0.1.1",
     "trobot": "*"
   },
   "devDependencies": {

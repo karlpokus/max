@@ -5,53 +5,81 @@ process.env.USERNAME = 'maxblipblop';
 
 var test = require('tape'),
     max = require('../lib/bot.js'),
-    replies = [],
-    logs = [];
+    reply,
+    log,
+    resetState = function(){
+      reply = null;
+      log = null;
+    };
 
 // swap handlers to intercept for testing
 max
   .removeAllListeners('reply')
   .on('reply', function(cardId, answer, res){
-    replies.push(answer);
+    reply = answer;
   })
   .removeAllListeners('log')
   .on('log', function(msg){
-    logs.push(msg);
+    log = msg;
   });
 
 var data = {
       action: {
         data: {
-          text: 'comment goes here',
+          text: 'text',
           card: {
             id: 'id'
           }
         },
         memberCreator: {
-          id: process.env.USERID,
+          id: 'id',
           username: 'username'
         }
+      },
+      model: {
+        id: 'id'
       }
     },
     res = {end: function(){}};
 
 test('replyToComment', function(t){
 
-  var expectedReply = 'comment author is bot';
+  data.action.memberCreator.id = process.env.USERID;
   max.emit('commentCard', data, res);
-  t.equal(logs[0], expectedReply, 'comment author is bot');
+  t.ok(/Comment author is bot/.test(log), 'comment author is bot');
+  t.ok(!reply);
+  resetState();
 
   data.action.memberCreator.id = 'some other id';
+  data.action.data.text = 'just a comment';
   max.emit('commentCard', data, res);
-  t.ok(/Använd @username så får de en notis/.test(replies[0]), 'no@inComment');
+  t.ok(/Använd @username så får de en notis/.test(reply), 'no @ in comment');
+  t.ok(!log);
+  resetState();
 
   data.action.data.text = '@' + process.env.USERNAME + ' sekreterare idag?';
   max.emit('commentCard', data, res);
-  t.ok(/C-F|Anna|Kicki/.test(replies[1]), 'secretary duty');
+  t.ok(/C-F|Anna|Kicki/.test(reply), '@bot secretary duty');
+  t.ok(!log);
+  resetState();
 
   data.action.data.text = '@' + process.env.USERNAME + ' hi!';
   max.emit('commentCard', data, res);
-  t.ok(/Blip blop/.test(replies[2]), '@bot but no other match');
+  t.ok(/Blip blop/.test(reply), '@bot but no other match');
+  t.ok(!log);
+  resetState();
+
+  data.action.data.text = '@foo zup?';
+  max.emit('commentCard', data, res);
+  t.ok(/Comment for another user/.test(log), '@user zup');
+  t.ok(!reply);
+  resetState();
+
+  data.model.id = process.env.USERID;
+  max.emit('commentCard', data, res);
+  t.ok(/Model is bot/.test(log), 'Model is bot');
+  t.ok(!reply);
+  resetState();
 
   t.end();
 });
@@ -60,15 +88,22 @@ test('longTitle', function(t){
 
   data.action.data.card.name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
   max.emit('createCard', data, res);
+  t.ok(/Långa titlar är svåra att läsa/.test(reply), '>100 createCard');
+  t.ok(!log);
+  resetState();
   max.emit('updateCard', data, res);
-  t.ok(/Långa titlar är svåra att läsa/.test(replies[3]), '>100 createCard');
-  t.ok(/Långa titlar är svåra att läsa/.test(replies[4]), '>100 updateCard');
+  t.ok(/Långa titlar är svåra att läsa/.test(reply), '>100 createCard');
+  t.ok(!log);
+  resetState();
 
   data.action.data.card.name = "lorem";
   max.emit('createCard', data, res);
+  t.ok(/Short title/.test(log), '<100 createCard');
+  t.ok(!reply);
+  resetState();
   max.emit('updateCard', data, res);
-  t.ok(/title is less than/.test(logs[1]), '<100 createCard');
-  t.ok(/title is less than/.test(logs[2]), '<100 updateCard');
+  t.ok(/Short title/.test(log), '<100 updateCard');
+  t.ok(!reply);
 
   t.end();
 });

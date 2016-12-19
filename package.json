@@ -1,6 +1,6 @@
 {
   "name": "max",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Max is a happy Trello bot",
   "main": "server.js",
   "scripts": {

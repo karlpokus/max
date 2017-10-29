@@ -20,7 +20,10 @@ server.on('request', function(req, res){
 
 # test
 ```bash
+# run tests
 $ npm test
+# check availability
+$ curl --head https://max-the-bot.herokuapp.com/
 ```
 
 # TODOs
